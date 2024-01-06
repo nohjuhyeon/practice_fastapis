@@ -76,18 +76,6 @@ async def list_post(request:Request):
     print(dict(await request.form()))
     return templates.TemplateResponse(name="users/list.html", context={'request':request})
 
-# from pymongo import MongoClient
-
-# mongodb에 접속 -> 자원에 대한 class 를 받아냄. 이때 class는 mongodbclient
-# mongoclient = MongoClient("mongodb://localhost:27017")  # 변수에 넣어야 함. 이때 이 변수는 클래스 변수임. 
-# mongoclient = MongoClient("mongodb://localhost:27017")
-
-# # database 연결
-# database = mongoclient['toy_fastapis']
-
-# # collection에 작업
-# collection = database['users']
-
 from databases.connections import Database
 
 from models.users import User # 컬랙션을 연결하고, 컬렉션에 저장/불러오기 하는 방법 
@@ -97,24 +85,7 @@ collection_user = Database(User)
 @router.get("/list") # 펑션 호출 방식
 async def list(request:Request):
     print(dict(request._query_params))
-#     user_list = [
-#     {"id": 1, "name": "김철수", "email": "cheolsu@example.com"},
-#     {"id": 2, "name": "이영희", "email": "younghi@example.com"},
-#     {"id": 3, "name": "박지성", "email": "jiseong@example.com"},
-#     {"id": 4, "name": "김미나", "email": "mina@example.com"},
-#     {"id": 5, "name": "장현우", "email": "hyeonwoo@example.com"}
-# ]
-
-    # insert 작업 진행
-    # documents = collection.find({})
-    # cast cursor to list
     user_list = await collection_user.get_all()
-
-    # for document in documents:
-    #     # print("document : {}".format(document))
-    #     user_list.append(document)
-    #     pass
-
     return templates.TemplateResponse(name="users/list_jinja.html"
                                       , context={'request':request
                                                  , 'users' :user_list})   
